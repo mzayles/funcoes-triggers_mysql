@@ -96,7 +96,7 @@ ORDER BY preco;
 -- A)
 DELIMITER //
     
-CREATE FUNCTION total_valor(preco DECIMAL(10, 2), qtd INT)
+CREATE FUNCTION total_valor(preco DECIMAL(10, 2), quantidade INT)
 RETURNS DECIMAL(10, 2)
 DETERMINISTIC
 BEGIN
@@ -135,3 +135,75 @@ WHERE preco = (SELECT MIN(preco) FROM produtos);
 -- D)
 SELECT ROUND(SUM(IF(quantidade > 0, preco * quantidade, 0)), 2) AS soma_total
 FROM produtos;
+
+-- Ex. 07
+-- A)
+DELIMITER //
+CREATE FUNCTION n_fatorial(numero INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE fatorial INT;
+    SET fatorial = 1;
+    
+    WHILE numero > 0 DO
+        SET fatorial = fatorial * numero;
+	SET numero = numero - 1;
+    END WHILE;
+    
+    RETURN fatorial;
+END;
+//
+DELIMITER ;
+
+SELECT fatorial(8) AS fatorial;
+
+-- B)
+DELIMITER //
+CREATE FUNCTION n_exponencial (base INT, expoente INT)
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE valor INT;
+    SET valor = 1;
+
+	WHILE expoente > 0 DO
+		SET valor = valor * base;
+        SET expoente = expoente - 1;
+	END WHILE;
+
+    RETURN valor;
+END;
+//
+DELIMITER ;
+
+SELECT n_exponencial(4, 2) AS exponencial;
+
+-- C)
+DELIMITER //
+
+CREATE FUNCTION palindromo(palavra VARCHAR(300))
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE tamanho INT;
+    DECLARE i INT;
+    
+    SET tamanho = LENGTH(palavra);
+    SET i = 1;
+    
+    WHILE i <= tamanho / 2 DO
+        IF SUBSTRING(palavra, i, 1) != SUBSTRING(palavra, tamanho - i + 1, 1) THEN
+            RETURN 0;
+        END IF;
+        SET i = i + 1;
+    END WHILE;
+    
+    RETURN 1;
+END;
+//
+
+DELIMITER ;
+
+SELECT palindromo('reviver') AS verificacao; 
+SELECT palindromo('viver') AS verificacao; 
