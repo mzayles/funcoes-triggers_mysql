@@ -117,3 +117,21 @@ SELECT ROUND(total_valor(259.999, 100), 2) AS valor_total;
 SELECT ROUND(total_valor (54.999, 80), 2) AS valor_total;
 SELECT ROUND(total_valor (69.999, 200), 2) AS valor_total;
 SELECT ROUND(total_valor (99.999, 50), 2) AS valor_total;
+
+-- Ex. 06
+-- A)
+SELECT COUNT(produto) AS total_produtos FROM produtos;
+
+-- B)
+SELECT produto, preco
+FROM produtos
+WHERE preco = (SELECT MAX(preco) FROM produtos);
+
+-- C)
+SELECT produto, preco
+FROM produtos
+WHERE preco = (SELECT MIN(preco) FROM produtos);
+
+-- D)
+SELECT ROUND(SUM(IF(quantidade > 0, preco * quantidade, 0)), 2) AS soma_total
+FROM produtos;
