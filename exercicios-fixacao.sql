@@ -28,7 +28,6 @@ WHERE nome LIKE '%A';
 -- Ex. 02
 -- A)
 
-DROP TABLE produtos;
 CREATE TABLE produtos (
 produto VARCHAR(100),
     preco DECIMAL(10, 2),
@@ -50,7 +49,6 @@ SELECT ROUND(AVG(preco), 2) AS media_produto FROM produtos;
 
 -- Ex. 03
 -- A)
-DROP TABLE eventos;
 CREATE TABLE eventos (
    data_evento DATETIME
 );
@@ -72,3 +70,24 @@ SELECT DATEDIFF ('2007-02-22' , '2006-05-30') AS dias_diferenca;
 
 -- D)
 SELECT DAYNAME('2007-02-22') AS dia_semana;
+
+-- Ex. 04
+-- A)
+INSERT INTO produtos VALUES
+('Rímel', '139.999', '0');
+
+SELECT
+    produto, preco, quantidade,
+    IF(quantidade > 0, 'Em Estoque', 'Fora de Estoque') AS status_estoque
+FROM produtos;
+
+-- B)
+SELECT
+    produto, preco, quantidade,
+    CASE
+        WHEN preco < 50.00 THEN 'Barato'
+        WHEN preco >= 50.00 AND preco < 100.00 THEN 'Médio'
+        ELSE 'Caro'
+    END AS categoria
+FROM produtos
+ORDER BY preco;
