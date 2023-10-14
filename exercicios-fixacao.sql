@@ -47,3 +47,28 @@ FROM produtos;
 
 -- C)
 SELECT ROUND(AVG(preco), 2) AS media_produto FROM produtos;
+
+-- Ex. 03
+-- A)
+DROP TABLE eventos;
+CREATE TABLE eventos (
+   data_evento DATETIME
+);
+
+INSERT INTO eventos VALUES
+('2006-05-30 09:17:30'),
+('2007-02-22 17:12:50'),
+('1981-10-16 20:23:32'),
+('1980-09-30 05:23:45');
+
+-- B)
+INSERT INTO eventos (data_evento) VALUES
+(now());
+
+SELECT * FROM eventos;
+
+-- C)
+SELECT DATEDIFF ('2007-02-22' , '2006-05-30') AS dias_diferenca;
+
+-- D)
+SELECT DAYNAME('2007-02-22') AS dia_semana;
