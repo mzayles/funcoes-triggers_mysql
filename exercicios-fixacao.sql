@@ -91,3 +91,29 @@ SELECT
     END AS categoria
 FROM produtos
 ORDER BY preco;
+
+-- Ex. 05
+-- A)
+DELIMITER //
+    
+CREATE FUNCTION total_valor(preco DECIMAL(10, 2), qtd INT)
+RETURNS DECIMAL(10, 2)
+DETERMINISTIC
+BEGIN
+    DECLARE total DECIMAL(10, 2);
+    
+    SET total = preco * qtd;
+   
+    RETURN total;
+END;
+//
+    
+DELIMITER ;
+
+SELECT ROUND(total_valor(23.200, 10), 2) AS valor_total;
+
+-- B)
+SELECT ROUND(total_valor(259.999, 100), 2) AS valor_total;
+SELECT ROUND(total_valor (54.999, 80), 2) AS valor_total;
+SELECT ROUND(total_valor (69.999, 200), 2) AS valor_total;
+SELECT ROUND(total_valor (99.999, 50), 2) AS valor_total;
