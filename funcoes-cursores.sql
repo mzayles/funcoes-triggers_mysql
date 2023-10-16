@@ -160,3 +160,40 @@ END; //
 DELIMITER ;
 
 SELECT media_livros_por_editora();
+
+-- Ex. 05
+DELIMITER //
+CREATE FUNCTION autores_sem_livros()
+RETURNS TEXT 
+DETERMINISTIC
+BEGIN
+    DECLARE padrao INT DEFAULT 0;
+    DECLARE autor_s TEXT DEFAULT '';
+
+    DECLARE livro_autor CURSOR FOR
+    SELECT primeiro_nome AS nome_autor
+    FROM Autor
+    WHERE id NOT IN (SELECT DISTINCT id_autor FROM Livro_Autor);
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET padrao = 1;
+
+    OPEN livro_autor;
+
+    contagem: LOOP
+        FETCH livro_autor INTO autor_s;
+        IF padrao = 1 THEN
+            LEAVE contagem;
+        END IF;
+
+        IF autor_s != '' THEN
+            SET autor_s = CONCAT(autor_s, ', ', autor_s);
+        END IF;
+    END LOOP;
+
+    CLOSE livro_autor;
+
+    RETURN autor_s;
+END; //
+DELIMITER ;
+
+SELECT autores_sem_livros() AS autor_sem_livro;
