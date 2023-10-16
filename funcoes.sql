@@ -181,7 +181,6 @@ SELECT n_exponencial(4, 2) AS exponencial;
 
 -- C)
 DELIMITER //
-
 CREATE FUNCTION palindromo(palavra VARCHAR(300))
 RETURNS INT
 DETERMINISTIC
@@ -202,7 +201,6 @@ BEGIN
     RETURN 1;
 END;
 //
-
 DELIMITER ;
 
 SELECT palindromo('reviver') AS verificacao; 
