@@ -110,3 +110,53 @@ DELIMITER ;
 
 SELECT atualizar_resumos();
 SELECT resumo FROM Livro;
+
+-- Ex. 04
+DELIMITER //
+CREATE FUNCTION media_livros_por_editora() 
+RETURNS DECIMAL(10, 2) 
+DETERMINISTIC
+BEGIN
+    DECLARE padrao INT DEFAULT 0;
+    DECLARE livros INT DEFAULT 0;
+    DECLARE editoras INT DEFAULT 0;
+    DECLARE media DECIMAL(10,2) DEFAULT 0.00;
+    DECLARE id_editora_n INT;
+    DECLARE livros_editora INT;
+
+    DECLARE livro_editora CURSOR FOR
+    SELECT COUNT(id) FROM Livro WHERE id_editora = id_editora_n;
+
+    DECLARE media_editora CURSOR FOR
+    SELECT id FROM Editora;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET padrao = 1;
+    
+    OPEN media_editora;
+
+    r_media: LOOP
+        FETCH media_editora INTO id_editora_n;
+
+        IF padrao = 1 THEN
+            LEAVE r_media;
+        END IF;
+
+        OPEN livro_editora;
+        FETCH livro_editora INTO livros_editora;
+        CLOSE livro_editora;
+
+        SET livros = livros + livros_editora;
+        SET editoras = editoras + 1;
+    END LOOP;
+    
+    IF editoras > 0 THEN
+        SET media = livros / editoras;
+    END IF;
+
+    CLOSE media_editora;
+
+    RETURN media;
+END; //
+DELIMITER ;
+
+SELECT media_livros_por_editora();
