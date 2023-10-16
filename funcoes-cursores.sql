@@ -72,3 +72,41 @@ END //
 DELIMITER ;
 
 SELECT listar_livros_por_autor('Bruno', 'Machado');
+
+-- Ex. 03
+DELIMITER //
+CREATE FUNCTION atualizar_resumos()
+RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE padrao INT DEFAULT 0;
+    DECLARE livro INT;
+    DECLARE resumo TEXT;
+    
+    DECLARE livro_resumo CURSOR FOR
+    SELECT id, resumo
+    FROM Livro;
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET padrao = 1;
+
+    OPEN livro_resumo;
+
+    atualizar: LOOP
+        FETCH livro_resumo INTO livro, resumo;
+        IF padrao = 1 THEN
+            LEAVE atualizar;
+        END IF;
+
+        SET resumo = CONCAT(resumo, ' Este é um excelente livro!');
+        
+        UPDATE Livro SET resumo = resumo WHERE id = livro;
+    END LOOP;
+
+    CLOSE livro_resumo;
+
+    RETURN 1;
+END //
+DELIMITER ;
+
+SELECT atualizar_resumos();
+SELECT resumo FROM Livro;
