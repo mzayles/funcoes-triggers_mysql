@@ -32,3 +32,22 @@ SET nome = 'Bartolomeu'
 WHERE nome = 'Gertrudes';
 
 SELECT * FROM Auditoria;
+
+-- Ex. 04
+DELIMITER //
+CREATE TRIGGER impedir_atualizacao BEFORE UPDATE ON Clientes
+FOR EACH ROW
+BEGIN
+    IF NEW.nome IS NULL OR NEW.nome = '' THEN
+        INSERT INTO Auditoria (mensagem)
+        VALUES (CONCAT('Inválido! Tentativa de atualização do nome do cliente para vazio ou nulo.'));
+        
+        SET NEW.nome = OLD.nome;
+    END IF;
+END; //
+DELIMITER ;
+
+INSERT INTO Clientes(nome)
+VALUES('');
+
+SELECT * FROM Auditoria;
