@@ -51,3 +51,21 @@ INSERT INTO Clientes(nome)
 VALUES('');
 
 SELECT * FROM Auditoria;
+
+-- Ex. 05
+DELIMITER //
+CREATE TRIGGER atualizar_estoque AFTER INSERT ON Pedidos
+FOR EACH ROW
+BEGIN
+    UPDATE Produtos
+    SET estoque = estoque - NEW.quantidade
+    WHERE id = NEW.produto_id;
+
+    IF (SELECT estoque FROM Produtos WHERE id = NEW.produto_id) < 5 THEN
+        INSERT INTO Auditoria (mensagem)
+        VALUES('O estoque do produto está abaixo de 5 unidades.');
+    END IF;
+END; //
+DELIMITER ;
+
+SELECT * FROM Auditoria;
